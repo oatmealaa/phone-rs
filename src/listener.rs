@@ -16,6 +16,7 @@ impl EventHandler for Handler {
         if !msg.content.starts_with(PREFIX) {
             return;
         }
+        println!("command");
         commands::command(&ctx,&msg).await;
     }
 

@@ -1,0 +1,13 @@
+{
+  "db": "SQLite",
+  "64b22e8d76aaa130f166c854bd429cf3eb18235fe3dd28e8d53815b2b9ce8c0b": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 0
+      }
+    },
+    "query": "CREATE TABLE IF NOT EXISTS curses ( guild_id TEXT NOT NULL, user_id TEXT NOT NULL, time_uncurse INTEGER NOT NULL, curse_type INTEGER NOT NULL);"
+  }
+}
