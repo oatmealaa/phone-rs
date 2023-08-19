@@ -26,7 +26,7 @@ let mut client = Client::builder(&token, intents)
         .expect("Err creating client");
     
     db_init().await.unwrap();
-    if let Err(why) = client.start().await {
+   if let Err(why) = client.start().await {
         println!("Client error: {:?}", why);
     }
 }
