@@ -1,0 +1,23 @@
+{
+  "db": "SQLite",
+  "57303e09382a3d18e50ec11f14da7d85ee8173c590538f71030771be59f08c38": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 1
+      }
+    },
+    "query": "INSERT INTO calls (channel_id) VALUES ($1)"
+  },
+  "d4a451efd6aed371228e57019be0563efaacd6310b1d728711d00e638006869e": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 0
+      }
+    },
+    "query": "CREATE TABLE IF NOT EXISTS calls (channel_id TEXT NOT NULL, connection_id TEXT);"
+  }
+}
