@@ -13,7 +13,7 @@ pub async fn command(ctx: &Context, msg: &Message) {
     
 
 
-    match split[0] {
+    match msg.content.as_str() {
         "!call" => call(ctx,msg,split).await,
 
 
