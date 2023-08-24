@@ -21,14 +21,14 @@ pub async fn start() {
 }
 
 pub async fn handlecalls() {
-    let mut pending = getpending().await;
+    //let mut pending = getpending().await;
        
-    let i: isize = 1;
-    while i < pending.len() {
-        connect(pending.get(i).unwrap(), pending.get(i-1).unwrap());
+    //let i: isize = 1;
+    //while i < pending.len() {
+    //    connect(pending.get(i).unwrap(), pending.get(i-1).unwrap());
         
-        i=i+2;
-    }
+    //    i=i+2;
+    //}
 }
 
 pub async fn getpending() -> Vec<Call> {
@@ -37,12 +37,12 @@ pub async fn getpending() -> Vec<Call> {
     let mut result = sqlx::query!("SELECT channel_id FROM calls WHERE connection_id IS NULL").execute(&mut conn).await;
 
     let mut rows = vec![];
-    while let Ok(Some(row)) = result.try_next().await {
-        rows.push(Call {
-            channel_id: row.channel_id,
-            connection_id: None,
-        });
-    }
+    //while let Ok(Some(row)) = result.try_next().await {
+    //    rows.push(Call {
+    //        channel_id: row.channel_id,
+    //        connection_id: None,
+    //    });
+    //}
 
     rows
 }
