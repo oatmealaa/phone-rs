@@ -18,9 +18,8 @@ pub struct Call {
 
 
 pub async fn call(ctx: &Context, msg: &Message, args: Vec<&str>) {
-    println!("hei");
     let mut call = Call::new(msg.channel_id).await;
-    call.insert();
+    call.insert().await;
 }
 
 impl Call {
@@ -36,11 +35,9 @@ impl Call {
         let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
             
         let id = format!("{:?}",self.channel_id);
-        println!("insert1");
         sqlx::query!("INSERT INTO calls (channel_id) VALUES ($1)",id)
         .execute(&mut conn)
         .await.unwrap();
-        println!("insert2");
     }
 }
 

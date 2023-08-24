@@ -14,6 +14,9 @@ use crate::listener::*;
 pub mod db;
 use crate::db::*;
 
+pub mod callhandler;
+use crate::callhandler::start;
+
 #[tokio::main]
 async fn main() {
     let token = env::var("DISCORD_TOKEN")
