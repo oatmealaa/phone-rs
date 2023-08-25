@@ -10,6 +10,34 @@
     },
     "query": "INSERT INTO calls (channel_id) VALUES ($1)"
   },
+  "a3bc5f376bdec57f7abb06316b18735411226a66f50354e94ca32fb8c9905d6c": {
+    "describe": {
+      "columns": [
+        {
+          "name": "channel_id",
+          "ordinal": 0,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Right": 0
+      }
+    },
+    "query": "SELECT channel_id FROM calls WHERE connection_id IS NULL"
+  },
+  "ce45840a5fd35b2b1c904e4bfa0ee2389ffcbd3bbeb2ef519edc607c736d57e3": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 2
+      }
+    },
+    "query": "UPDATE calls SET connection_id = $1 WHERE channel_id = $2"
+  },
   "d4a451efd6aed371228e57019be0563efaacd6310b1d728711d00e638006869e": {
     "describe": {
       "columns": [],
@@ -19,5 +47,15 @@
       }
     },
     "query": "CREATE TABLE IF NOT EXISTS calls (channel_id TEXT NOT NULL, connection_id TEXT);"
+  },
+  "efdd08bbb62685ef2690f45c4caac29b497d455e86bd1e7308bfb7f3b0bc6bc7": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 0
+      }
+    },
+    "query": "DELETE FROM calls;"
   }
 }
