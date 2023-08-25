@@ -8,6 +8,7 @@ use sqlx::{
     Sqlite,
     Connection,
     SqliteConnection,
+    *,
 };
 
 use crate::commands::call::Call;
@@ -34,7 +35,7 @@ pub async fn handlecalls() {
 pub async fn getpending() -> Vec<Call> {
     let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
     
-    let mut result = sqlx::query!("SELECT channel_id FROM calls WHERE connection_id IS NULL").execute(&mut conn).await;
+    let mut result = sqlx::query!("SELECT channel_id FROM calls WHERE connection_id IS NULL").fetch(&mut conn);
 
     let mut rows = vec![];
     //while let Ok(Some(row)) = result.try_next().await {
@@ -50,10 +51,12 @@ pub async fn getpending() -> Vec<Call> {
 pub async fn connect(channel1: Call, channel2: Call) {
     let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
     
-    sqlx::query!("UPDATE calls SET connection_id = $1 WHERE channel_id = $2",channel2.channel_id,channel1.channel_id)
+    let (cid, cid2) = (channel1.channel_id.to_string(), channel2.channel_id.to_string());
+
+    sqlx::query!("UPDATE calls SET connection_id = $1 WHERE channel_id = $2",cid2,cid)
     .execute(&mut conn).await;
 
-    sqlx::query!("UPDATE calls SET connection_id = $1 WHERE channel_id = $2",channel1.channel_id,channel2.channel_id)
+    sqlx::query!("UPDATE calls SET connection_id = $1 WHERE channel_id = $2",cid,cid2)
     .execute(&mut conn).await;
    
 } 
