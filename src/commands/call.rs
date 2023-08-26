@@ -34,7 +34,7 @@ impl Call {
     async fn insert(&self) {
         let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
             
-        let id = format!("{:?}",self.channel_id);
+        let id = format!("{:?}",self.channel_id.as_u64());
         sqlx::query!("INSERT INTO calls (channel_id) VALUES ($1)",id)
         .execute(&mut conn)
         .await.unwrap();
