@@ -36,7 +36,11 @@ pub async fn start() {
 pub async fn handlecalls() {
     println!("calls");
     let mut pending: Vec<Call> = getpending().await;
-       
+    
+    if pending.len() =< 1 {
+        return;
+    }
+
     let mut i: usize = 1;
     while i < pending.len() {
         connect(pending.get(i).unwrap(), pending.get(i-1).unwrap());
