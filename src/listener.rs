@@ -4,6 +4,7 @@
      prelude::*,
  };
 use crate::commands;
+use tokio::task::spawn;
 
 pub struct Handler;
 
@@ -22,6 +23,8 @@ impl EventHandler for Handler {
 
 
     async fn ready(&self, ctx: Context, ready: Ready) {
-        println!("ready");
+ 
+         
+         println!("ready");
     }
 }
