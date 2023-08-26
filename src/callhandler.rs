@@ -37,7 +37,7 @@ pub async fn handlecalls() {
     println!("calls");
     let mut pending: Vec<Call> = getpending().await;
     
-    if pending.len() =< 1 {
+    if pending.len() <= 1 {
         return;
     }
 
