@@ -5,6 +5,7 @@
  };
 use crate::commands;
 use tokio::task::spawn;
+use crate::callhandler;
 
 pub struct Handler;
 
@@ -23,8 +24,8 @@ impl EventHandler for Handler {
 
 
     async fn ready(&self, ctx: Context, ready: Ready) {
- 
+        let thread = spawn(callhandler::start());
          
-         println!("ready");
+        println!("ready");
     }
 }
