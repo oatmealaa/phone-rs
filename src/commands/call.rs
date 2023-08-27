@@ -35,9 +35,11 @@ impl Call {
         let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
             
         let id = format!("{:?}",self.channel_id.as_u64());
+        println!("hi");
         sqlx::query!("INSERT INTO calls (channel_id) VALUES ($1)",id)
         .execute(&mut conn)
         .await.unwrap();
+        println!("hello");
     }
 }
 
