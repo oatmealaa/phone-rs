@@ -10,6 +10,24 @@
     },
     "query": "INSERT INTO calls (channel_id) VALUES ($1)"
   },
+  "78e8c9c7515cee51be806ef023c54f64e0011850c543a515bf1b2b8cef12baca": {
+    "describe": {
+      "columns": [
+        {
+          "name": "connection_id",
+          "ordinal": 0,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        true
+      ],
+      "parameters": {
+        "Right": 1
+      }
+    },
+    "query": "SELECT connection_id FROM calls WHERE channel_id =  $1"
+  },
   "a3bc5f376bdec57f7abb06316b18735411226a66f50354e94ca32fb8c9905d6c": {
     "describe": {
       "columns": [
