@@ -34,8 +34,7 @@ pub async fn start() {
 }
 
 pub async fn handlecalls() {
-    println!("calls");
-    let mut pending: Vec<Call> = getpending().await;
+    let pending: Vec<Call> = getpending().await;
     
     if pending.len() <= 1 {
         return;
@@ -43,8 +42,7 @@ pub async fn handlecalls() {
 
     let mut i: usize = 1;
     while i < pending.len() {
-        connect(pending.get(i).unwrap(), pending.get(i-1).unwrap());
-        
+        connect(pending.get(i).unwrap(), pending.get(i-1).unwrap()).await;
         i=i+2;
     }
 }
@@ -75,6 +73,17 @@ pub async fn connect(channel1: &Call, channel2: &Call) {
 
     sqlx::query!("UPDATE calls SET connection_id = $1 WHERE channel_id = $2",cid,cid2)
     .execute(&mut conn).await;
-   
+
+    println!("connected");
 } 
 
+pub async fn getconnection(channel_id: ChannelId) -> Option<ChannelId> {
+    let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
+
+    let cid = format!("{:?}", channel_id.as_u64());
+
+    let result = sqlx::query!("SELECT connection_id FROM calls WHERE channel_id =  $1", cid).fetch_one(&mut conn).await.unwrap();
+
+    println!("{:?}", result);
+    None
+}
