@@ -107,8 +107,8 @@ pub async fn end_call(channel1: ChannelId, channel2: ChannelId) {
     let (cid, cid2) = (channel1.to_string(), channel2.to_string());
 
     sqlx::query!("
-    UPDATE calls SET connection_id = NULL WHERE channel_id = $1;
-    UPDATE calls SET connection_id = NULL WHERE channel_id = $2;
+    DELETE FROM calls WHERE channel_id = $1;
+    DELETE FROM calls WHERE channel_id = $2;
     ", cid, cid2).execute(&mut conn).await;
 }
 

@@ -8,7 +8,7 @@
         "Right": 2
       }
     },
-    "query": "\n    UPDATE calls SET connection_id = NULL WHERE channel_id = $1;\n    UPDATE calls SET connection_id = NULL WHERE channel_id = $2;\n    "
+    "query": "\n    DELETE FROM calls WHERE channel_id = $1;\n    DELETE FROM calls WHERE channel_id = $2;\n    "
   },
   "57303e09382a3d18e50ec11f14da7d85ee8173c590538f71030771be59f08c38": {
     "describe": {

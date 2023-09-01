@@ -18,7 +18,7 @@ pub struct Call {
 }
 
 
-pub async fn call(ctx: &Context, msg: &Message, args: Vec<&str>) {
+pub async fn call(ctx: &Context, msg: &Message) {
     if let Some(cid) = callhandler::get_connection(msg.channel_id).await {
         msg.reply(&ctx, "Already connected to a call").await;
         return;
