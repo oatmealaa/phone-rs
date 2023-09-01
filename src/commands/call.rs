@@ -9,6 +9,8 @@ use sqlx::{Sqlite, Connection, *};
 use crate::utils::*;
 use rand::prelude::*;
 use crate::callhandler;
+use crate::log::{log, Info};
+
 
 const DB_URL: &str = "sqlite://sqlite.db";
 
@@ -24,8 +26,15 @@ pub async fn call(ctx: &Context, msg: &Message) {
         return;
     }
 
+    if callhandler::is_pending(msg.channel_id).await {
+        msg.channel_id.say(&ctx, "shutup").await;
+        return;
+    }
+
     let call = Call::new(msg.channel_id).await;
     call.insert().await;
+    log(Info::CallPending(msg.channel_id.as_u64().clone())).await;
+    msg.channel_id.say(ctx, "**Connection pending**").await;
 }
 
 impl Call {

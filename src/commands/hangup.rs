@@ -16,5 +16,5 @@ pub async fn hangup(ctx: &Context, msg: &Message) {
     };
     
 
-    end_call(msg.channel_id,connection).await;
+    end_call(msg.channel_id,connection,ctx).await;
 }

@@ -6,6 +6,7 @@
 use crate::commands;
 use tokio::task::spawn;
 use crate::callhandler;
+use crate::log::{log, Info};
 
 pub struct Handler;
 
@@ -20,7 +21,6 @@ impl EventHandler for Handler {
         }
 
         if let Some(cid) = callhandler::get_connection(msg.channel_id).await {
-            println!("{:?}", cid.as_u64());
             callhandler::send_message(&msg,&ctx,cid).await; 
         }
 
@@ -32,8 +32,7 @@ impl EventHandler for Handler {
 
 
     async fn ready(&self, ctx: Context, ready: Ready) {
-        let thread = spawn(callhandler::start());
-         
-        println!("ready");
+        log(Info::Ready).await;
+        callhandler::start(&ctx.clone()).await;
     }
 }

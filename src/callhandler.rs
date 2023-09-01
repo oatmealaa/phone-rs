@@ -1,9 +1,10 @@
+
+
 use serenity::{
     prelude::*,
     model::prelude::*,
     utils::*,
     model::channel::Message,
-
 };
 
 use sqlx::{
@@ -19,11 +20,11 @@ use tokio::time::interval;
 use std::time::Duration;
 
 use crate::commands::call::Call;
+use crate::log::{log, Info};
 
 const DB_URL: &str = "sqlite://sqlite.db";
 
-pub async fn start() {
-    println!("start");
+pub async fn start(ctx: &Context) {
     let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
     let mut interval = interval(Duration::from_millis(100));
     
@@ -33,11 +34,11 @@ pub async fn start() {
 
     loop {
         interval.tick().await;
-        handle_calls().await;
+        handle_calls(ctx).await;
     }
 }
 
-pub async fn handle_calls() {
+pub async fn handle_calls(ctx: &Context) {
     let pending: Vec<Call> = get_pending().await;
     
     if pending.len() <= 1 {
@@ -45,7 +46,7 @@ pub async fn handle_calls() {
     }
     let mut i: usize = 1;
     while i < pending.len() {
-        connect(pending.get(i).unwrap(), pending.get(i-1).unwrap()).await;
+        connect(pending.get(i).unwrap(), pending.get(i-1).unwrap(), ctx).await;
         i=i+2;
     }
 }
@@ -66,7 +67,7 @@ pub async fn get_pending() -> Vec<Call> {
     rows
 }
 
-pub async fn connect(channel1: &Call, channel2: &Call) {
+pub async fn connect(channel1: &Call, channel2: &Call, ctx: &Context) {
     let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
     
     let (cid, cid2) = (channel1.channel_id.to_string(), channel2.channel_id.to_string());
@@ -77,7 +78,10 @@ pub async fn connect(channel1: &Call, channel2: &Call) {
     sqlx::query!("UPDATE calls SET connection_id = $1 WHERE channel_id = $2",cid,cid2)
     .execute(&mut conn).await;
 
-    println!("connected");
+
+    log(Info::CallStarted(channel1.channel_id.as_u64().clone(), channel2.channel_id.as_u64().clone())).await;
+    channel1.channel_id.say(ctx, "**Connection established**").await;
+    channel2.channel_id.say(ctx, "**Connection established**").await;
 } 
 
 pub async fn get_connection(channel_id: ChannelId) -> Option<ChannelId> {
@@ -97,11 +101,23 @@ pub async fn get_connection(channel_id: ChannelId) -> Option<ChannelId> {
     None
 }
 
-pub async fn send_message(msg: &Message, ctx: &Context, connected_channel: ChannelId) {
-    connected_channel.say(&ctx ,format!("{}: {}", msg.author.name, msg.content)).await.unwrap();
+pub async fn is_pending(channel_id: ChannelId) -> bool {
+    let pending = get_pending().await;
+
+    for call in pending {
+        if call.channel_id == channel_id {
+            return true;
+        }
+    }
+    false
 }
 
-pub async fn end_call(channel1: ChannelId, channel2: ChannelId) {
+pub async fn send_message(msg: &Message, ctx: &Context, connected_channel: ChannelId) {
+    connected_channel.say(&ctx ,format!("**{}**: {}", msg.author.name, msg.content)).await.unwrap();
+    log(Info::Message(msg.author.name.clone(), msg.channel_id.as_u64().clone(), connected_channel.as_u64().clone(), msg.content.clone())).await;
+}
+
+pub async fn end_call(channel1: ChannelId, channel2: ChannelId, ctx: &Context) {
     let mut conn = SqliteConnection::connect(DB_URL).await.unwrap();
 
     let (cid, cid2) = (channel1.to_string(), channel2.to_string());
@@ -110,5 +126,9 @@ pub async fn end_call(channel1: ChannelId, channel2: ChannelId) {
     DELETE FROM calls WHERE channel_id = $1;
     DELETE FROM calls WHERE channel_id = $2;
     ", cid, cid2).execute(&mut conn).await;
+
+    log(Info::CallEnded(channel1.as_u64().clone(),channel2.as_u64().clone())).await;
+    channel1.say(ctx, "Call ended").await;
+    channel2.say(ctx, "Connection ended call").await;
 }
 
