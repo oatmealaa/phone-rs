@@ -8,6 +8,7 @@ use sqlx::{Sqlite, Connection, *};
 
 use crate::utils::*;
 use rand::prelude::*;
+use crate::callhandler;
 
 const DB_URL: &str = "sqlite://sqlite.db";
 
@@ -18,6 +19,11 @@ pub struct Call {
 
 
 pub async fn call(ctx: &Context, msg: &Message, args: Vec<&str>) {
+    if let Some(cid) = callhandler::get_connection(msg.channel_id).await {
+        msg.reply(&ctx, "Already connected to a call").await;
+        return;
+    }
+
     let call = Call::new(msg.channel_id).await;
     call.insert().await;
 }
