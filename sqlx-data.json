@@ -1,5 +1,15 @@
 {
   "db": "SQLite",
+  "00953c598c1137566c777ea2bb47df2c29e2e211fd307124b8330bbfbd270def": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 2
+      }
+    },
+    "query": "\n    UPDATE calls SET connection_id = NULL WHERE channel_id = $1;\n    UPDATE calls SET connection_id = NULL WHERE channel_id = $2;\n    "
+  },
   "57303e09382a3d18e50ec11f14da7d85ee8173c590538f71030771be59f08c38": {
     "describe": {
       "columns": [],
